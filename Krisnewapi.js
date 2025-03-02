@@ -4,7 +4,7 @@ const promptInput = document.querySelector(".prompt-input");
 const fileInput = document.getElementById("file-input");
 
 // Setting up API
-const API_KEY = "AIzaSyCvb9nug2qBKG7yKgH8QKzHwkEKJatpG7Y"; 
+const API_KEY = "key"; 
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
 let userMessage = "";
