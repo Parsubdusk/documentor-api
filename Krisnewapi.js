@@ -11,7 +11,7 @@ let userMessage = "";
 const chatHistory = [];
 let uploadedFileContent = null; // Store file content
 
-// ✅ Function to create a chat message element 
+//Function to create a chat message element 
 const createMsgElement = (content, ...classes) => {
     const chatsContainer = document.querySelector(".chats-container");
 
@@ -28,7 +28,7 @@ const createMsgElement = (content, ...classes) => {
     return msgDiv;
 };
 
-// ✅ Function to send a request to Google's Generative AI API
+// Function to send a request to Google's Generative AI API
 async function getAIResponse(userMessage) {
     let parts = [{ text: userMessage }];
 
