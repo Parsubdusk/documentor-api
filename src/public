@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentor References</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #EAEAEA;
+            margin: 0;
+            padding: 0;
+            color: #1B263B;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        header {
+            background-color: #1B263B;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            width: 100%;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #00C9A7;
+            padding: 10px;
+            width: 100%;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+        nav a:hover {
+            background-color: #1B263B;
+            border-radius: 5px;
+        }
+        .references-container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+            width: 60%;
+            margin-top: 20px;
+        }
+        .reference-list {
+            list-style: none;
+            padding: 0;
+        }
+        .reference-list li {
+            background-color: #00C9A7;
+            color: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .reference-list li:hover {
+            background-color: #1B263B;
+        }
+        .api-container {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .api-container h3 {
+            margin-bottom: 10px;
+        }
+        .api-results {
+            list-style: none;
+            padding: 0;
+        }
+        .api-results li {
+            margin: 0.5em 0;
+            padding: 0.5em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+        .api-button {
+            padding: 0.75em 1.5em;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 10px 0;
+            background-color: #000080;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        .api-button:hover {
+            background-color: #000099;
+        }
+        footer {
+            background-color: #1B263B;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Documentor: Reliable References for Legal Assistance
+    </header>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/chatbot">Chatbot</a>
+        <a href="/references">References</a>
+    </nav>
+    <div class="references-container">
+        <h2>Find Reliable Legal Assistance</h2>
+        <p>Click on any reference below to explore helpful legal resources:</p>
+        <ul class="reference-list">
+            <li onclick="window.open('https://www.usa.gov/legal-aid', '_blank')">USA Government Legal Aid</li>
+            <li onclick="window.open('https://www.lsc.gov/', '_blank')">Legal Services Corporation</li>
+            <li onclick="window.open('https://www.nolo.com/', '_blank')">Nolo Legal Advice</li>
+            <li onclick="window.open('https://www.findlaw.com/', '_blank')">FindLaw Resources</li>
+            <li onclick="window.open('https://www.justia.com/', '_blank')">Justia Legal Help</li>
+        </ul>
+        <div class="api-container">
+            <h3>Or, find in-person legal aid near you:</h3>
+            <button class="api-button" id="findLocalProviders">Find Local Legal Aid Providers</button>
+            <ul class="api-results" id="apiResults"></ul>
+        </div>
+    </div>
+    <footer>
+        &copy; 2025 Documentor. All Rights Reserved.
+    </footer>
+
+    <script>
+        document.getElementById('findLocalProviders').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const { latitude, longitude } = position.coords;
+                    const radius = 50;
+                    fetch(`http://localhost:5000/legal-aid?lat=${latitude}&lon=${longitude}&radius=${radius}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const resultsList = document.getElementById('apiResults');
+                            resultsList.innerHTML = '';
+                            if (data.length === 0) {
+                                resultsList.innerHTML = '<li>No providers found within the specified radius.</li>';
+                            } else {
+                                data.forEach(provider => {
+                                    const li = document.createElement('li');
+                                    li.innerHTML = `<strong>${provider.name}</strong><br>
+                                                    ${provider.address}<br>
+                                                    ${provider.distance.toFixed(2)} km away`;
+                                    resultsList.appendChild(li);
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('There was an error retrieving legal aid providers.');
+                        });
+                }, error => {
+                    console.error('Geolocation error:', error);
+                    alert('Unable to retrieve your location.');
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        });
+    </script>
+</body>
+</html>
